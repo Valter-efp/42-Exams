@@ -1,10 +1,10 @@
 #include <unistd.h>
 
-void ft_writeword(char *start, char *end)
+void ft_putword(char *str, int start, int end)
 {
-	while(start < end)
+	while (start < end)
 	{
-		write(1, start, 1);
+		write(1, &str[start], 1);
 		start++;
 	}
 }
@@ -12,41 +12,43 @@ void ft_writeword(char *start, char *end)
 int main(int argc, char *argv[])
 {
 	char *str;
-	char *fws;
-	char *fwe;
+	int i = 0;
+	int fws;
+	int fwe;
 
 	if (argc > 1)
 	{
 		str = argv[1];
-		while(*str == ' '|| *str == '\t')
-			str++;
-		fws = str;
-		while(*str && *str != ' ' && *str != '\t')
-			str++;
-		fwe = str;
-		while(*str == ' ' || *str == '\t')
-			str++;
-		if(*str)
+
+		while (str[i] == ' ' || str[i] == '\t')
+			i++;
+		fws = i;
+		while (str[i] && str[i] != ' ' && str[i] != '\t')
+			i++;
+		fwe = i;
+		while (str[i] == ' ' || str[i] == '\t')
+			i++;
+		if (str[i])
 		{
-			while(*str)
+			while (str[i])
 			{
-				if(*str == ' ' || *str == '\t')
+				if (str[i] == ' ' || str[i] == '\t')
 				{
-					while(*str == ' ' || *str == '\t')
-						str++;
-					if(*str)
-						write( 1, " ", 1);
+					while (str[i] == ' ' || str[i] == '\t')
+						i++;
+					if (str[i])
+						write(1, " ", 1);
 				}
 				else
 				{
-					write(1, str, 1);
-					str++;
+					write(1, &str[i], 1);
+					i++;
 				}
 			}
-			write(1," ", 1);
+			write(1, " ", 1);
 		}
-		ft_writeword(fws, fwe);
+		ft_putword(str, fws, fwe);
 	}
 	write(1, "\n", 1);
-	return(0);
+	return 0;
 }
