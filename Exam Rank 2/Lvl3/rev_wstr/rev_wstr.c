@@ -1,4 +1,4 @@
-#include <unistd.h>
+# include <unistd.h>
 
 void ft_putword(char *str, int ws, int we)
 {
@@ -18,24 +18,25 @@ int main(int argc, char **argv)
 		int we = 0;
 		char *str = argv[1];
 
-		while(str[i])
+		while (str[i])
 			i++;
-		
-		while (i >= 0)
+		while(i >= 0)
 		{
-			while (str[i] == '\0' || str[i] == ' ')
+			while (str[i] == ' ' || str[i] == '\t' || str[i] == '\0')
+			{
 				i--;
+			}
 			we = i + 1;
-			while (str[i] && str[i] != ' ')
+			while (str[i] != ' ' && str[i] != '\t' && str[i] != '\0')
+			{
 				i--;
-			ws = i +1;
-			int flag;
-			flag = ws;
+			}
+			ws = i + 1;
 			ft_putword(str, ws, we);
-			if (flag != 0)
+			if (ws > 0)
 				write(1, " ", 1);
 		}
 	}
 	write(1, "\n", 1);
-	return(0);
+	return (0);
 }
