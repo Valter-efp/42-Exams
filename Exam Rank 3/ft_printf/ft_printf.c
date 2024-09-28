@@ -1,47 +1,43 @@
 #include <unistd.h>
 #include <stdarg.h>
 
-void put_str(char *str, int *len)
+int putstr(char *str, int i)
 {
 	if (!str)
-		str = "(null)";
-	while (*str)
-		*len = *len + write(1, str++, 1);
+		return putstr("(null)", i);
+	if (!str[i])
+		return i;
+	return putstr(str, i + write(1, &str[i], 1));
 }
 
-void put_digit(long long int nbr, int base, int *len)
+int putnum(long num, int base)
 {
-	if (nbr < 0)
-	{
-		nbr = nbr * - 1;
-		*len = *len + write(1, "-", 1);
-	}
-	if (nbr >= base)
-		put_digit((nbr / base), base, len);
-	*len = *len + write(1, &("0123456789abcdef"[nbr % base]), 1);
+	char *b = "0123456789abcdef";
+	
+	if (num < 0 && base == 10)
+		return write(1, "-", 1) + putnum(num*-1, base);
+	if (num < 0 && base == 16)
+		return putnum((unsigned int)num, base);
+	if (num/base == 0)
+		return write(1, &b[num%base], 1);
+	return putnum(num/base, base) + putnum(num%base, base);
 }
-int ft_printf(const char *format, ... )
+
+int ptf(char *s, va_list args, int i, int n)
 {
-	int len = 0;
+	if (!s[i])
+		return n;
+	if (s[i] == '%' && s[i + 1] == 's')
+		return ptf(s, args, i + 2, n + putstr(va_arg(args, char *), 0));
+	if (s[i] == '%' && s[i + 1] == 'd')
+		return ptf(s, args, i + 2, n + putnum(va_arg(args, int), 10));
+	if (s[i] == '%' && s[i + 1] == 'x')
+		return ptf(s, args, i + 2, n + putnum(va_arg(args, int), 16));
+	return ptf(s, args, i + 1, n + write(1, &s[i], 1));
+}
 
-	va_list pointer;
-	va_start(pointer, format);
-
-	while (*format)
-	{
-		if ((*format == '%') && ((*(format + 1) == 's') || (*(format + 1) == 'd') || (*(format + 1) == 'x')))
-		{
-			format++;
-			if (*format == 's')
-				put_str(va_arg(pointer, char *), &len);
-			else if (*format == 'd')
-				put_digit((long long int)va_arg(pointer,int), 10, &len);
-			else if (*format == 'x')
-				put_digit((long long int)va_arg(pointer, unsigned int), 16, &len);
-		}
-		else
-			len = len + write(1, format, 1);
-		format++;
-	}
-	return(va_end(pointer), len);
+int ft_printf(char *s, ...)
+{
+	va_list args;
+	return va_start(args, s), va_end(args), ptf(s, args, 0, 0);
 }
