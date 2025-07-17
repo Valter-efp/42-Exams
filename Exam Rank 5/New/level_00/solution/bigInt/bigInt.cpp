@@ -115,8 +115,63 @@ std::ostream& operator<<(std::ostream& os, const bigint& num) {
     return os;
 }
 
+
+
+
+///This is a test main! not part of the exercise
+void print_test(const std::string &desc, const bigint &value, const std::string &expected) {
+	std::cout << desc << "\n";
+	std::cout << "Expected: " << expected << "\n";
+	std::cout << "Actual  : " << value << "\n";
+	std::cout << (value.getDigits() == std::string(expected.rbegin(), expected.rend()) ? "✅ PASS" : "❌ FAIL") << "\n\n";
+}
+
 int main() {
-    bigint num(123456);
-    std::cout << "Number: " << num << std::endl; // Should print "123456"
-    return 0;
+	// Constructor tests
+	bigint a(0);
+	bigint b(12345);
+	bigint c("987654321");
+	bigint invalid("12a3"); // should default to 0
+
+	print_test("Construct from 0", a, "0");
+	print_test("Construct from 12345", b, "12345");
+	print_test("Construct from string \"987654321\"", c, "987654321");
+	print_test("Construct from invalid string \"12a3\"", invalid, "0");
+
+	// Addition
+	bigint d = bigint("999999999999999999") + bigint("1");
+	print_test("Addition: 999999999999999999 + 1", d, "1000000000000000000");
+
+	bigint e("12345");
+	e += bigint("55");
+	print_test("Addition with += : 12345 += 55", e, "12400");
+
+	// Comparisons
+	bigint x("123456789");
+	bigint y("987654321");
+
+	std::cout << "Comparisons:\n";
+	std::cout << "123456789 == 123456789 → " << (x == bigint("123456789") ? "✅ PASS" : "❌ FAIL") << "\n";
+	std::cout << "123456789 != 987654321 → " << (x != y ? "✅ PASS" : "❌ FAIL") << "\n";
+	std::cout << "123456789 < 987654321  → " << (x < y ? "✅ PASS" : "❌ FAIL") << "\n";
+	std::cout << "987654321 > 123456789  → " << (y > x ? "✅ PASS" : "❌ FAIL") << "\n";
+	std::cout << "123456789 <= 123456789 → " << (x <= x ? "✅ PASS" : "❌ FAIL") << "\n";
+	std::cout << "987654321 >= 123456789 → " << (y >= x ? "✅ PASS" : "❌ FAIL") << "\n\n";
+
+	// Shift Left
+	bigint shiftLeft("42");
+	bigint sl = shiftLeft << 3; // Expected 42000
+	print_test("Shift left: 42 << 3", sl, "42000");
+
+	// Shift Right
+	bigint shiftRight("1337");
+	bigint sr = shiftRight >> 2; // Expected 13
+	print_test("Shift right: 1337 >> 2", sr, "13");
+
+	// Shift edge case
+	bigint shiftMax("999");
+	bigint sr2 = shiftMax >> 5; // All digits gone => 0
+	print_test("Shift right overflow: 999 >> 5", sr2, "0");
+
+	return 0;
 }
