@@ -1,55 +1,49 @@
 #pragma once
 
-#include <sstream>
 #include <iostream>
 #include <string>
-#include <cstdlib>
+#include <sstream>
 
-class bigint
-{
-	private:
-		std::string str;
-		//std::string result;
-	public:
-		bigint();
-		bigint(unsigned int num);
-		bigint(const bigint& source);
+class bigint {
+private:
+    std::string str; // Stores digits as string, most significant digit first
 
-		std::string getStr()const;
+public:
+    // Constructors
+    bigint();                    // Default to "0"
+    bigint(unsigned int num);   // From integer
+    bigint(const bigint& other); // Copy constructor
 
-		bigint& operator=(const bigint& source);
+    bigint& operator=(const bigint& other); // Copy assignment
 
-		// addition
-		bigint operator+(const bigint& other)const;
-		bigint& operator+=(const bigint& other);
+    std::string getStr() const;
 
-		// increments
-		bigint& operator++(); // ++x
-		bigint operator++(int); // x++
+    // Arithmetic
+    bigint operator+(const bigint& other) const;
+    bigint& operator+=(const bigint& other);
+    bigint& operator++();     // Prefix
+    bigint operator++(int);   // Postfix
 
-		// shift with num
-		bigint operator<<(unsigned int n)const;
-		bigint operator>>(unsigned int n)const;
-		bigint& operator<<=(unsigned int n);
-		bigint& operator>>=(unsigned int n);
+    // Digit shift (base-10) with unsigned int
+    bigint operator<<(unsigned int n) const;
+    bigint operator>>(unsigned int n) const;
+    bigint& operator<<=(unsigned int n);
+    bigint& operator>>=(unsigned int n);
 
-		//shift with object
-		bigint operator<<(const bigint& other)const;
-		bigint operator>>(const bigint& other)const;
-		bigint& operator<<=(const bigint& other);
-		bigint& operator>>=(const bigint& other);
+    // Digit shift (base-10) with bigint
+    bigint operator<<(const bigint& other) const;
+    bigint operator>>(const bigint& other) const;
+    bigint& operator<<=(const bigint& other);
+    bigint& operator>>=(const bigint& other);
 
-		// ==, !=, <, >, <=, >=
-		bool operator==(const bigint& other) const;
-		bool operator!=(const bigint& other) const;
-		bool operator<(const bigint& other) const;
-		bool operator>(const bigint& other) const;
-		bool operator<=(const bigint& other) const;
-		bool operator>=(const bigint& other) const;
-
-		// ~bigint();
-
+    // Comparisons
+    bool operator==(const bigint& other) const;
+    bool operator!=(const bigint& other) const;
+    bool operator<(const bigint& other) const;
+    bool operator>(const bigint& other) const;
+    bool operator<=(const bigint& other) const;
+    bool operator>=(const bigint& other) const;
 };
 
-std::ostream& operator<<(std::ostream& output, const bigint& obj);
-
+// Stream output
+std::ostream& operator<<(std::ostream& os, const bigint& obj);

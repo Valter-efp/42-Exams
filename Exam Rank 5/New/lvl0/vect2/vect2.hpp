@@ -1,48 +1,40 @@
-#ifndef VECT2_HPP
-#define VECT2_HPP
-
+#pragma once
 #include <iostream>
 
-class vect2
-{
-	private:
-		int x;
-		int y;
-	public:
-		vect2();
-		vect2(int num1, int num2);
-		vect2(const vect2& source);
-		vect2& operator=(const vect2& source);
+class vect2 {
+private:
+    int x, y;
 
-		int operator[](int index) const;
-		int& operator[](int index); // NON-COST
+public:
+    vect2(int x = 0, int y = 0);              // Default + Param constructor
+    vect2(const vect2& other);                // Copy constructor
+    vect2& operator=(const vect2& other);     // Assignment
 
-		vect2 operator-() const;
-		vect2 operator*(int num) const;
+    int operator[](int index) const;
+    int& operator[](int index);              // Non-const
 
-		vect2& operator*=(int num);
+    vect2 operator-() const;
+    vect2 operator*(int scalar) const;
+    vect2& operator*=(int scalar);
 
-		vect2& operator+=(const vect2& obj);
-		vect2& operator-=(const vect2& obj);
-		vect2& operator*=(const vect2& obj);
+    vect2 operator+(const vect2& rhs) const;
+    vect2 operator-(const vect2& rhs) const;
+    vect2 operator*(const vect2& rhs) const;
 
-		vect2 operator+(const vect2& obj) const;
-		vect2 operator-(const vect2& obj) const;
-		vect2 operator*(const vect2& obj) const;
+    vect2& operator+=(const vect2& rhs);
+    vect2& operator-=(const vect2& rhs);
+    vect2& operator*=(const vect2& rhs);
 
-		vect2& operator++();
-		vect2 operator++(int);
-		vect2& operator--();
-		vect2 operator--(int);
+    vect2& operator++();     // Prefix
+    vect2 operator++(int);   // Postfix
+    vect2& operator--();
+    vect2 operator--(int);
 
-		bool operator==(const vect2& obj) const;
-		bool operator!=(const vect2& obj) const;
+    bool operator==(const vect2& rhs) const;
+    bool operator!=(const vect2& rhs) const;
 
-		~vect2();
+    ~vect2() = default;      // No dynamic memory => default is fine
 };
 
-vect2 operator*(int num, const vect2& obj);
-
-std::ostream& operator<<(std::ostream& os,const vect2& obj);
-
-#endif
+vect2 operator*(int scalar, const vect2& v);
+std::ostream& operator<<(std::ostream& os, const vect2& v);
