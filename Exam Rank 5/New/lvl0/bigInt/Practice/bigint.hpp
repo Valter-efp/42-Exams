@@ -1,7 +1,7 @@
 #pragma once
 
-#include <sstream>
 #include <string>
+#include <sstream>
 #include <iostream>
 
 class bigint{
@@ -15,25 +15,24 @@ class bigint{
 
         std::string getStr()const;
 
-        // --- Arithmetic ---
         bigint operator+(const bigint &other)const;
         bigint &operator+=(const bigint &other);
         bigint &operator++();
         bigint operator++(int);
 
-        // --- Shifting (with unsigned int) ---
+
         bigint operator<<(unsigned int n)const;
         bigint operator>>(unsigned int n)const;
         bigint &operator<<=(unsigned int n);
         bigint &operator>>=(unsigned int n);
 
-        // --- Shifting (with bigint) ---
+
         bigint operator<<(const bigint &other)const;
         bigint operator>>(const bigint &other)const;
         bigint &operator<<=(const bigint &other);
         bigint &operator>>=(const bigint &other);
 
-        // --- Comparisons ---
+
         bool operator==(const bigint &other)const;
         bool operator!=(const bigint &other)const;
         bool operator<(const bigint &other)const;
@@ -42,5 +41,5 @@ class bigint{
         bool operator>=(const bigint &other)const;
 };
 
-// --- Output stream ---
+
 std::ostream &operator<<(std::ostream &os, const bigint &obj);

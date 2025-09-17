@@ -1,20 +1,14 @@
-#include "unistd.h"
-#include "stdlib.h"
-#include "stdio.h"
-#include "fcntl.h"
+#include "bsq.h"
 
 typedef struct s_map {
-    int row;
-    int col;
-    char empty;
-    char obst;
-    char full;
+    int y, x;
+    char empty, obst, full;
     char **grid;
 } t_map;
 
 void free_map(t_map *map) {
     if (map->grid) {
-        for (int i = 0; i < map->row; i++)
+        for (int i = 0; i < map->y; i++)
             free(map->grid[i]);
         free(map->grid);
     }
@@ -33,7 +27,7 @@ int init_map(t_map *map, FILE *file) {
     if (!file || !map)
         return 0;
 
-    map->row = 0;
+    map->y = 0;
     size_t len = 0;
     ssize_t read;
     char *line = NULL;
@@ -45,10 +39,10 @@ int init_map(t_map *map, FILE *file) {
     }
     int i = 0;
     while (line[i] >= '0' && line[i] <= '9') {
-        map->row = map->row * 10 + (line[i] - '0');
+        map->y = map->y * 10 + (line[i] - '0');
         i++;
     }
-    if (i == 0 || map->row <= 0) {
+    if (i == 0 || map->y <= 0) {
         free(line);
         return 0;
     }
@@ -75,36 +69,36 @@ int read_grid(t_map *map, FILE *file) {
     size_t len = 0;
     ssize_t read;
     char *line = NULL;
-    int row = 0;
+    int y = 0;
 
-    map->grid = calloc(map->row, sizeof(char *));
+    map->grid = calloc(map->y, sizeof(char *));
     if (!map->grid)
         return 0;
 
-    while ((read = getline(&line, &len, file)) != -1 && row < map->row) {
-        if (row == 0)
-            map->col = read - 1;
-        else if (read - 1 != map->col) {
+    while ((read = getline(&line, &len, file)) != -1 && y < map->y) {
+        if (y == 0)
+            map->x = read - 1;
+        else if (read - 1 != map->x) {
             free(line);
             return 0;
         }
-        map->grid[row] = malloc(sizeof(char) * (map->col + 1));
-        if (!map->grid[row]) {
+        map->grid[y] = malloc(sizeof(char) * (map->x + 1));
+        if (!map->grid[y]) {
             free(line);
             return 0;
         }
-        for (int col = 0; col < map->col; col++) {
-            if (line[col] != map->empty && line[col] != map->obst) {
+        for (int x = 0; x < map->x; x++) {
+            if (line[x] != map->empty && line[x] != map->obst) {
                 free(line);
                 return 0;
             }
-            map->grid[row][col] = line[col];
+            map->grid[y][x] = line[x];
         }
-        map->grid[row][map->col] = '\0';
-        row++;
+        map->grid[y][map->x] = '\0';
+        y++;
     }
     free(line);
-    return (row == map->row);
+    return (y == map->y);
 }
 
 int min3(int a, int b, int c) {
@@ -117,16 +111,16 @@ int min3(int a, int b, int c) {
 void find_biggest_square(t_map *map) {
     int max_i = 0, max_j = 0, max_size = 0;
 
-    int **dp = calloc(map->row, sizeof(int *));
+    int **dp = calloc(map->y, sizeof(int *));
     if (!dp) return;
 
-    for (int i = 0; i < map->row; i++) {
-        dp[i] = calloc(map->col, sizeof(int));
+    for (int i = 0; i < map->y; i++) {
+        dp[i] = calloc(map->x, sizeof(int));
         if (!dp[i]) return;
     }
 
-    for (int i = 0; i < map->row; i++) {
-        for (int j = 0; j < map->col; j++) {
+    for (int i = 0; i < map->y; i++) {
+        for (int j = 0; j < map->x; j++) {
             if (map->grid[i][j] == map->empty) {
                 if (i == 0 || j == 0)
                     dp[i][j] = 1;
@@ -147,7 +141,7 @@ void find_biggest_square(t_map *map) {
         }
     }
 
-    for (int i = 0; i < map->row; i++)
+    for (int i = 0; i < map->y; i++)
         free(dp[i]);
     free(dp);
 }
@@ -156,7 +150,7 @@ void print_grid(t_map *map) {
     if (!map || !map->grid)
         return;
 
-    for (int i = 0; i < map->row; i++)
+    for (int i = 0; i < map->y; i++)
         fprintf(stdout, "%s\n", map->grid[i]);
 }
 

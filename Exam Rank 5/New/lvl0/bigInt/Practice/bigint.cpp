@@ -29,10 +29,10 @@ static std::string add_strings(const std::string &a, const std::string &b){
     while(i < len || carry){
         int digits_a = (i < a.length()) ? a[a.length() - 1 - i] - '0' : 0;
         int digits_b = (i < b.length()) ? b[b.length() - 1 - i] - '0' : 0;
-        sum = digits_a +digits_b + carry;
+        sum = digits_a + digits_b + carry;
         carry = sum / 10;
         result.push_back((sum % 10) + '0');
-        ++i;
+        i++;
     }
 
     while(result.length() > 1 && result.back() == '0')
