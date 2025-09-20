@@ -31,7 +31,7 @@ static std::string add_strings(const std::string &a, const std::string &b){
         int digits_b = (i < b.length()) ? b[b.length() - 1 - i] - '0' : 0;
         sum = digits_a + digits_b + carry;
         carry = sum / 10;
-        result.push_back((sum % 10) + '0');
+        result.push_back((sum %10) + '0');
         i++;
     }
 
@@ -53,7 +53,7 @@ bigint &bigint::operator+=(const bigint &other){
 }
 
 bigint &bigint::operator++(){
-    return(*this += bigint(1));
+    return (*this += bigint(1));
 }
 
 bigint bigint::operator++(int){
@@ -72,8 +72,8 @@ bigint bigint::operator<<(unsigned int n)const{
 }
 
 bigint bigint::operator>>(unsigned int n)const{
-    if (n >= str.size())
-        return bigint(0);
+    if(*this == bigint(0))
+        return *this;
     bigint temp(*this);
     temp.str.erase(str.size() - n);
     return temp;
@@ -85,7 +85,7 @@ bigint &bigint::operator<<=(unsigned int n){
 }
 
 bigint &bigint::operator>>=(unsigned int n){
-    *this = *this >> n;
+    *this = * this >> n;
     return *this;
 }
 

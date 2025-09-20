@@ -1,8 +1,7 @@
 #pragma once
-
 #include <iostream>
-#include "TreeBag.hpp"
 #include "searchable_bag.hpp"
+#include "TreeBag.hpp"
 
 class searchable_tree_bag : public TreeBag, public searchable_bag{
     public:

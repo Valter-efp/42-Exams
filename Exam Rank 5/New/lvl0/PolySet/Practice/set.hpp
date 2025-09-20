@@ -1,5 +1,4 @@
 #pragma once
-
 #include <iostream>
 #include "searchable_bag.hpp"
 
@@ -16,7 +15,7 @@ class set{
 		bool has(int value)const;
 		void insert(int);
 		void insert(int *, int);
-		void print();
+		void print()const;
 		void clear();
 
 		const searchable_bag &get_bag();

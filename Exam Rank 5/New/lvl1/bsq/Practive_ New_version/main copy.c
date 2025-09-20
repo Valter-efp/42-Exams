@@ -1,6 +1,9 @@
-#include "bsq.h"
+/* This is a new version, must test. It might be better to memorize. */
+
+//#include "bsq.h"
 #include <stdio.h>
 #include <stdlib.h>
+#include <sys/types.h>
 
 typedef struct s_map {
     int y, x;
@@ -126,23 +129,27 @@ void mark_square(t_map *map, int i, int j, int size) {
 void find_biggest_square(t_map *map) {
     int max_i = 0, max_j = 0, max_size = 0;
 
-    int **dp = calloc(map->y, sizeof(int *));
-    if (!dp) return;
+    int **square_size = calloc(map->y, sizeof(int *));
+    if (!square_size) return;
 
     for (int i = 0; i < map->y; i++) {
-        dp[i] = calloc(map->x, sizeof(int));
-        if (!dp[i]) return;
+        square_size[i] = calloc(map->x, sizeof(int));
+        if (!square_size[i]) return;
     }
 
     for (int i = 0; i < map->y; i++) {
         for (int j = 0; j < map->x; j++) {
             if (map->grid[i][j] == map->empty) {
                 if (i == 0 || j == 0)
-                    dp[i][j] = 1;
+                    square_size[i][j] = 1;
                 else
-                    dp[i][j] = 1 + min3(dp[i - 1][j], dp[i][j - 1], dp[i - 1][j - 1]);
-                if (dp[i][j] > max_size) {
-                    max_size = dp[i][j];
+                    square_size[i][j] = 1 + min3(
+                        square_size[i - 1][j],
+                        square_size[i][j - 1],
+                        square_size[i - 1][j - 1]
+                    );
+                if (square_size[i][j] > max_size) {
+                    max_size = square_size[i][j];
                     max_i = i;
                     max_j = j;
                 }
@@ -153,8 +160,8 @@ void find_biggest_square(t_map *map) {
     mark_square(map, max_i, max_j, max_size);
 
     for (int i = 0; i < map->y; i++)
-        free(dp[i]);
-    free(dp);
+        free(square_size[i]);
+    free(square_size);
 }
 
 void print_grid(t_map *map) {
@@ -195,5 +202,5 @@ int main(int ac, char **av) {
                 putchar('\n');
         }
     }
-    return 0;
+    return EXIT_SUCCESS;
 }
