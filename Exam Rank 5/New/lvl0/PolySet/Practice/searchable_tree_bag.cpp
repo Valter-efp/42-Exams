@@ -17,8 +17,8 @@ bool searchable_tree_bag::has(int value)const{
     while(current){
         if(current->value == value){
             return true;
-        } else if(current->value > value){
-            current = current->left;
+        } else if (current->value > value){
+            current = current ->left;
         } else {
             current = current->right;
         }

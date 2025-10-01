@@ -8,13 +8,15 @@ typedef struct s_map{
 } t_map;
 
 void free_map(t_map *map){
-    for(int y = 0; y < map->y; y++)
-        free(map->grid[y]);
-    free(map->grid);
+    if(map->grid){
+        for(int y = 0; y < map->y; y++)
+            free(map->grid[y]);
+        free(map->grid);
+    }
 }
 
 int map_error(FILE *file, t_map *map){
-    fprintf(stderr, "map errro\n");
+    fprintf(stderr, "map error\n");
     if(file)
         fclose(file);
     if(map)
@@ -23,13 +25,14 @@ int map_error(FILE *file, t_map *map){
 }
 
 int init_header(FILE *file, t_map *map){
-    if(!map || !file)
+    if(!file || !map)
         return 0;
     
     map->y = 0;
     size_t len = 0;
     ssize_t read;
     char *line = NULL;
+
     read = getline(&line, &len, file);
     if(read == -1){
         free(line);
@@ -44,6 +47,7 @@ int init_header(FILE *file, t_map *map){
         free(line);
         return 0;
     }
+
     map->empty = line[i++];
     map->obst = line[i++];
     map->full = line[i++];
@@ -54,6 +58,7 @@ int init_header(FILE *file, t_map *map){
     }
     free(line);
     return 1;
+    
 }
 
 int init_grid(FILE *file, t_map *map) {
@@ -103,40 +108,40 @@ int min3(int a, int b, int c) {
 }
 
 void find_biggest_square(t_map *map) {
-    int max_i = 0, max_j = 0, max_size = 0;
+    int max_y = 0, max_x = 0, max_size = 0;
 
     int **dp = calloc(map->y, sizeof(int *));
     if (!dp) return;
 
-    for (int i = 0; i < map->y; i++) {
-        dp[i] = calloc(map->x, sizeof(int));
-        if (!dp[i]) return;
+    for (int y = 0; y < map->y; y++) {
+        dp[y] = calloc(map->x, sizeof(int));
+        if (!dp[y]) return;
     }
 
-    for (int i = 0; i < map->y; i++) {
-        for (int j = 0; j < map->x; j++) {
-            if (map->grid[i][j] == map->empty) {
-                if (i == 0 || j == 0)
-                    dp[i][j] = 1;
+    for (int y = 0; y < map->y; y++) {
+        for (int x = 0; x < map->x; x++) {
+            if (map->grid[y][x] == map->empty) {
+                if (y == 0 || x == 0)
+                    dp[y][x] = 1;
                 else
-                    dp[i][j] = 1 + min3(dp[i - 1][j], dp[i][j - 1], dp[i - 1][j - 1]);
-                if (dp[i][j] > max_size) {
-                    max_size = dp[i][j];
-                    max_i = i;
-                    max_j = j;
+                    dp[y][x] = 1 + min3(dp[y - 1][x], dp[y][x - 1], dp[y - 1][x - 1]);
+                if (dp[y][x] > max_size) {
+                    max_size = dp[y][x];
+                    max_y = y;
+                    max_x = x;
                 }
             }
         }
     }
 
-    for (int i = max_i - max_size + 1; i <= max_i; i++) {
-        for (int j = max_j - max_size + 1; j <= max_j; j++) {
-            map->grid[i][j] = map->full;
+    for (int y = max_y - max_size + 1; y <= max_y; y++) {
+        for (int x = max_x - max_size + 1; x <= max_x; x++) {
+            map->grid[y][x] = map->full;
         }
     }
 
-    for (int i = 0; i < map->y; i++)
-        free(dp[i]);
+    for (int y = 0; y < map->y; y++)
+        free(dp[y]);
     free(dp);
 }
 

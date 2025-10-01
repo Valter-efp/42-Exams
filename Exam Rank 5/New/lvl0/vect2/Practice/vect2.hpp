@@ -8,7 +8,7 @@ class vect2{
         vect2(int x = 0, int y = 0);
         vect2(const vect2 &other);
         vect2 &operator=(const vect2 &other);
-        ~vect2();
+        ~vect2() = default;
 
         int operator[](int index)const;
         int &operator[](int index);

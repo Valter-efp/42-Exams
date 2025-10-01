@@ -8,13 +8,15 @@ typedef struct s_map{
 } t_map;
 
 void free_map(t_map *map){
-    for(int y = 0; y < map->y; y++)
-        free(map->grid[y]);
-    free(map->grid);
+    if(map->grid){
+        for(int y = 0; y < map->y; y++)
+            free(map->grid[y]);
+        free(map->grid);
+    }
 }
 
 int map_error(FILE *file, t_map *map){
-    fprintf(stderr, "map errro\n");
+    fprintf(stderr, "map error\n");
     if(file)
         fclose(file);
     if(map)
@@ -22,14 +24,15 @@ int map_error(FILE *file, t_map *map){
     return 0;
 }
 
-int init_header(FILE *file, t_map *map){
-    if(!map || !file)
+int init_map(t_map *map, FILE *file){
+    if(!file || !map)
         return 0;
     
     map->y = 0;
     size_t len = 0;
     ssize_t read;
     char *line = NULL;
+
     read = getline(&line, &len, file);
     if(read == -1){
         free(line);
@@ -44,6 +47,7 @@ int init_header(FILE *file, t_map *map){
         free(line);
         return 0;
     }
+
     map->empty = line[i++];
     map->obst = line[i++];
     map->full = line[i++];
@@ -54,9 +58,10 @@ int init_header(FILE *file, t_map *map){
     }
     free(line);
     return 1;
+    
 }
 
-int init_grid(FILE *file, t_map *map) {
+int read_grid(t_map *map, FILE *file) {
     if (!map || !file)
         return 0;
 
@@ -151,7 +156,7 @@ void print_grid(t_map *map) {
 int main(int ac, char **av) {
     if (ac == 1) {
         t_map map = {0};
-        if (!init_header(stdin, &map) || !init_grid(stdin, &map))
+        if (!init_map(&map, stdin) || !read_grid(&map, stdin))
             return map_error(NULL, &map);
         find_biggest_square(&map);
         print_grid(&map);
@@ -163,7 +168,7 @@ int main(int ac, char **av) {
             FILE *file = fopen(av[i], "r");
             if (!file) {
                 fprintf(stderr, "map error\n");
-            } else if (!init_header(file, &map) || !init_grid(file, &map)) {
+            } else if (!init_map(&map, file) || !read_grid(&map, file)) {
                 map_error(file, &map);
             } else {
                 find_biggest_square(&map);

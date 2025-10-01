@@ -6,8 +6,6 @@ vect2::vect2(const vect2 &other) = default;
 
 vect2 &vect2::operator=(const vect2 &other) = default;
 
-vect2::~vect2(){}
-
 int vect2::operator[](int index)const{
     return index == 0 ? x : y;
 }
@@ -41,7 +39,6 @@ vect2 vect2::operator-(const vect2 &other)const{
 vect2 vect2::operator*(const vect2 &other)const{
     return vect2(x * other.x, y * other.y);
 }
-
 
 vect2 &vect2::operator+=(const vect2 &other){
     x += other.x;
@@ -94,7 +91,7 @@ bool vect2::operator!=(const vect2 &other)const{
 }
 
 vect2 operator*(int scalar, const vect2 &v){
-    return (v * scalar);
+    return v * scalar;
 }
 
 std::ostream &operator<<(std::ostream &os, const vect2 &v){

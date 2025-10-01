@@ -14,7 +14,7 @@ searchable_array_bag::~searchable_array_bag(){}
 
 bool searchable_array_bag::has(int value)const{
     for(int i = 0; i < _size; i++){
-        if(value == _data[i])
+        if(_data[i] == value)
             return true;
     }
     return false;
