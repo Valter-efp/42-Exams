@@ -1,5 +1,6 @@
 #include <unistd.h>
 #include <stdlib.h>
+#include <stdio.h>
 
 typedef struct{
 	int x;
@@ -25,12 +26,12 @@ void free_board(char **board, int height){
 }
 
 void print_board(char **board, int width, int height){
-	for(int y = 0; y < height; y++){
-		for(int x = 0; x < width; x++){
-			write(1, &board[y][x], 1);
-		}
-		write(1, "\n", 1);
-	}
+    for(int y = 0; y < height; y++){
+        for(int x = 0; x < width; x++){
+            putchar(board[y][x]);
+        }
+        putchar('\n');
+    }
 }
 
 int count_neighbours(char **board, int x, int y, int width, int height){

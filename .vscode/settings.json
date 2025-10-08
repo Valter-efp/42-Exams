@@ -48,6 +48,7 @@
         "cinttypes": "cpp",
         "typeinfo": "cpp",
         "stdlib.h": "c",
-        "set": "cpp"
+        "set": "cpp",
+        "unistd.h": "c"
     }
 }
