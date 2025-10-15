@@ -1,0 +1,104 @@
+🧾 mini_serv – Test Sheet
+🧱 1. Compile
+cc -Wall -Wextra -Werror mini_serv.c -o mini_serv
+
+🚀 2. Run the server
+🪟 Terminal Window 0:
+./mini_serv 8081
+
+
+The server starts and waits for connections on 127.0.0.1:8081.
+
+No output yet (that’s normal).
+
+👤 3. Connect Clients
+🪟 Terminal Window 1 (Client 0):
+nc 127.0.0.1 8081
+
+
+This is Client 0.
+
+Nothing appears yet because it’s the first client.
+
+🪟 Terminal Window 2 (Client 1):
+nc 127.0.0.1 8081
+
+
+In Terminal 1, you should now see:
+
+server: client 1 just arrived
+
+💬 4. Send and Receive Messages
+From Terminal 1 (Client 0):
+Hello everyone
+
+
+Appears in Terminal 2 as:
+
+client 0: Hello everyone
+
+From Terminal 2 (Client 1):
+Hi client 0!
+
+
+Appears in Terminal 1 as:
+
+client 1: Hi client 0!
+
+🔁 5. Multi-line Messages
+
+If a client sends:
+
+line1
+line2
+
+
+Other clients receive:
+
+client X: line1
+client X: line2
+
+❌ 6. Disconnect Test
+
+Close Terminal 2 (Ctrl + C or close window).
+Then Terminal 1 should show:
+
+server: client 1 just left
+
+⚠️ 7. Error Handling Tests
+Missing argument:
+./mini_serv
+
+
+Output (stderr):
+
+Wrong number of arguments
+
+Port in use:
+./mini_serv 8081
+./mini_serv 8081
+
+
+The second instance prints:
+
+Fatal error
+
+🧹 8. Memory Leak Check
+
+(Optional, if you have Valgrind):
+
+valgrind --leak-check=full ./mini_serv 8081
+
+
+Connect and disconnect clients.
+At exit, you should see no memory leaks.
+
+✅ Expected Behavior Summary
+
+Action	Expected Output
+Start without args	Wrong number of arguments
+Client connects	Other clients see server: client X just arrived
+Message sent	Other clients see client X: message
+Client disconnects	Other clients see server: client X just left
+System call / malloc fail	Fatal error
+No leaks	Verified with Valgrind
